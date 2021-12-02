@@ -1,0 +1,9 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:nholik/advent-of-code-2021.git",
+  "author": "Nick Holik <nholik@gmail.com>",
+  "license": "MIT",
+  "type": "module"
+}
