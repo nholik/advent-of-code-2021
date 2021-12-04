@@ -70,26 +70,37 @@ function Board(lines) {
   };
 }
 
-const runGame = function (inputs) {
+const runGame = function (inputs, stopAtFirst) {
   const [roundInput, ...boardInputs] = inputs.split("\n\n");
   const dealer = new Dealer(roundInput);
   const boards = boardInputs.map((board) => new Board(board));
   let draw;
+  let lastWinner;
   do {
     draw = dealer.runRound();
     for (let i = 0; i < boards.length; i++) {
       const b = boards[i];
-      b.updateCard(draw);
-      if (dealer.checkBoard(b)) {
-          b.isWinner = true;//don't really need this for this game
-        return draw * b.sumUnmarked();
+      if (!b.isWinner) {
+        b.updateCard(draw);
+        if (dealer.checkBoard(b)) {
+          if (stopAtFirst) {
+            return draw * b.sumUnmarked();
+          }
+          b.isWinner = true;
+          lastWinner = { draw, boardIndex: i };
+        }
       }
     }
   } while (draw !== undefined);
+  return lastWinner.draw * boards[lastWinner.boardIndex].sumUnmarked();
 };
 
 const inputsReal = fs.readFileSync("dayfour/input.txt", "utf8");
 
 export function dayFourPartA() {
-  return runGame(inputsReal);
+  return runGame(inputsReal, true);
+}
+
+export function dayFourPartB() {
+  return runGame(inputsReal, false);
 }
